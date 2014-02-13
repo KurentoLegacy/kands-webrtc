@@ -1,1 +1,10 @@
 *~
+.classpath
+.project
+.settings/
+.gclient_entries
+chromium_deps/
+chromium_gn/
+libjingle*
+target/
+trunk/
