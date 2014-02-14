@@ -5,6 +5,7 @@
 	<groupId>com.kurento.kands</groupId>
 	<artifactId>kands-webrtc</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
 	<name>Kurento Android SDK WebRTC</name>
 	<description>WebRTC support for Android</description>
@@ -100,7 +101,6 @@
 			</extension>
 		</extensions>
 	</build>
-
 
 	<scm>
 		<url>https://github.com/Kurento/${project.artifactId}</url>
