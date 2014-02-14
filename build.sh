@@ -20,7 +20,7 @@ if [[ ! -f $FAIL_MARK && -d "trunk" ]]; then
   pushd "trunk"
 
   DIFF=$(svn diff --summarize -rCOMMITTED:HEAD)
-  if [ -z $DIFF ]; then
+  if [ -z "$DIFF" ]; then
     echo "There is not any change";
     exit 0;
   fi
