@@ -12,7 +12,7 @@ fi
 echo "Do deploy to URL: $url"
 
 $SCRIPT_RELATIVE_PATH/build.sh && \
-version=$(webrtc_get_revision) && \
+version=r$(webrtc_get_revision) && \
 mvn clean package \
   org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy-file \
   -Dfile="libjingle_peerconnection_so.so" \
