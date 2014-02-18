@@ -41,12 +41,12 @@ if [[ ! -f $FAIL_MARK && -d "trunk" ]]; then
 fi
 
 # Update
-gclient sync --nohooks --force && \
-cp util/common.gypi trunk/talk/build/common.gypi || \
+gclient sync --nohooks --force || \
 fail
 
 pushd "trunk" > /dev/null
 source ./build/android/envsetup.sh && \
+export GYP_DEFINES="build_with_libjingle=1 build_with_chromium=0 libjingle_java=1 $GYP_DEFINES" && \
 gclient runhooks && \
 ninja -C out/Debug libjingle_peerconnection_jar || \
 fail
