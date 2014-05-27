@@ -9,10 +9,11 @@ if [ -z "$url" ]; then
   exit -1
 fi
 
-echo "Do deploy to URL: $url"
+version=r$(webrtc_get_revision)
+
+echo "Do deploy $version to URL: $url"
 
 $SCRIPT_RELATIVE_PATH/build.sh && \
-version=r$(webrtc_get_revision) && \
 mvn clean package \
   org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy-file \
   -Dfile="libjingle_peerconnection_so.so" \
