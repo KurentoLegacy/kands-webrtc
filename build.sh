@@ -41,8 +41,8 @@ if [[ ! -f $FAIL_MARK && -d "trunk" ]]; then
 fi
 
 # Update
-gclient sync --nohooks --force || \
-fail
+gclient sync || \
+echo "*** Probably critical error ***"
 
 pushd "trunk" > /dev/null
 source ./build/android/envsetup.sh && \
