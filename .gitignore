@@ -7,4 +7,6 @@ chromium_deps/
 chromium_gn/
 libjingle*
 target/
-trunk/
+_bad_scm/
+src/
+last_execution_fails

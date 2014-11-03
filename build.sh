@@ -15,8 +15,8 @@ function fail {
 function end {
   pushd $SCRIPT_ABS_PATH > /dev/null
 
-  cp trunk/out/Debug/libjingle_peerconnection.jar . && \
-  cp trunk/out/Debug/libjingle_peerconnection_so.so . && \
+  cp src/out/Debug/libjingle_peerconnection.jar . && \
+  cp src/out/Debug/libjingle_peerconnection_so.so . && \
   rm -f $FAIL_MARK || \
   fail
 
@@ -28,8 +28,8 @@ function end {
 pushd $SCRIPT_ABS_PATH > /dev/null
 
 # Check for updates
-if [[ ! -f $FAIL_MARK && -d "trunk" ]]; then
-  pushd "trunk" > /dev/null
+if [[ ! -f $FAIL_MARK && -d "src" ]]; then
+  pushd "src" > /dev/null
 
   DIFF=$(svn diff --summarize -rCOMMITTED:HEAD)
   if [ -z "$DIFF" ]; then
@@ -37,20 +37,20 @@ if [[ ! -f $FAIL_MARK && -d "trunk" ]]; then
     end
   fi
 
-  popd > /dev/null # "trunk"
+  popd > /dev/null # "src"
 fi
 
 # Update
 gclient sync || \
 echo "*** Probably critical error ***"
 
-pushd "trunk" > /dev/null
+pushd "src" > /dev/null
 source ./build/android/envsetup.sh && \
 export GYP_DEFINES="OS=android $GYP_DEFINES" && \
 gclient runhooks && \
 ninja -C out/Debug libjingle_peerconnection_jar || \
 fail
-popd > /dev/null # "trunk"
+popd > /dev/null # "src"
 
 popd > /dev/null # $SCRIPT_ABS_PATH
 

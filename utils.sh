@@ -11,5 +11,5 @@ function get_abs_path {
 }
 
 function webrtc_get_revision {
-  echo $(cd "trunk" && svn info | grep "Revision" | awk '{print $2}')
+  echo $(cd "src" && svn info | grep "Revision" | awk '{print $2}')
 }
