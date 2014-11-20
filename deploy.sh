@@ -44,7 +44,7 @@ while [ "$1" != "" ]; do
 done
 
 [ -n "$revision" ] && REVISION=" -r $revision"
-[ -n "$target_arch" ] && TARGET_ARCH=" target_arch=$target_arch"
+[ -n "$target_arch" ] && TARGET_ARCH=" -t $target_arch"
 [ -n "$settings" ] && SETTINGS=" --settings $settings"
 [ -n "$url" ] || { echo "Error: Maven repository URL is mandatory"; usage; exit 1; }
 
