@@ -53,8 +53,9 @@ $SCRIPT_RELATIVE_PATH/build.sh $REVISION $TARGET_ARCH || \
     { echo "Error: Build failed"; exit 1; }
 
 echo "Do deploy to URL: $url"
-version=r$(webrtc_get_revision) && \
-mvn $SETTINGS clean package \
+[ -z "$target_arch" ] && target_arch=arm
+version=r$(webrtc_get_revision) || { echo "Unable to get version"; exit 1; }
+[ -f libjingle_peerconnection_so.so ] && mvn $SETTINGS clean package \
   org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy-file \
   -Dfile="libjingle_peerconnection_so.so" \
   -DgroupId="com.kurento.kands" \
@@ -63,8 +64,8 @@ mvn $SETTINGS clean package \
   -Dclassifier="$target_arch" \
   -Dpackaging="so" \
   -Durl=$url \
-  -DrepositoryId=kurento-releases && \
-mvn $SETTINGS clean package \
+  -DrepositoryId=kurento-releases
+[ -f libjingle_peerconnection.jar ] && mvn $SETTINGS clean package \
   org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy-file \
   -Dfile="libjingle_peerconnection.jar" \
   -DgroupId="com.kurento.kands" \
