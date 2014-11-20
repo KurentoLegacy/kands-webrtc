@@ -73,6 +73,11 @@ if [[ ! -f $FAIL_MARK && -d "src" ]]; then
   popd > /dev/null # "src"
 fi
 
+# Get depot_tools
+[ -d ./depot_tools ] || git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git || \
+    { echo "Unable to download depot_tools"; exit 1; }
+export PATH=$PATH:$SCRIPT_ABS_PATH/depot_tools
+
 # Update
 gclient sync $REVISION || \
 echo "*** Probably critical error ***"
