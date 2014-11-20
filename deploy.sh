@@ -27,7 +27,7 @@ while [ "$1" != "" ]; do
             shift
             settings=$1
             ;;
-        -u | url )
+        -u | --url )
             shift
             url=$1
             ;;
@@ -36,6 +36,7 @@ while [ "$1" != "" ]; do
             exit
             ;;
         * )
+            echo "Error: Unknown option"
             usage
             exit 1
     esac
@@ -45,7 +46,7 @@ done
 [ -n "$revision" ] && REVISION=" -r $revision"
 [ -n "$target_arch" ] && TARGET_ARCH=" target_arch=$target_arch"
 [ -n "$settings" ] && SETTINGS=" --settings $settings"
-[ -n "$url" ] || {echo "Error: Maven repository URL is mandatory"; usage; exit 1; }
+[ -n "$url" ] || { echo "Error: Maven repository URL is mandatory"; usage; exit 1; }
 
 echo "Build WebRTC"
 $SCRIPT_RELATIVE_PATH/builds.sh $REVISION $TARGET_ARCH
