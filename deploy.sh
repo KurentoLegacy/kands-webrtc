@@ -49,7 +49,7 @@ done
 [ -n "$url" ] || { echo "Error: Maven repository URL is mandatory"; usage; exit 1; }
 
 echo "Build WebRTC"
-$SCRIPT_RELATIVE_PATH/builds.sh $REVISION $TARGET_ARCH
+$SCRIPT_RELATIVE_PATH/build.sh $REVISION $TARGET_ARCH
 
 echo "Do deploy to URL: $url"
 version=r$(webrtc_get_revision) && \
