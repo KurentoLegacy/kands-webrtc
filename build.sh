@@ -5,17 +5,6 @@ source $SCRIPT_RELATIVE_PATH/utils.sh
 
 SCRIPT_ABS_PATH=$(get_abs_path)
 
-function end {
-  pushd $SCRIPT_ABS_PATH > /dev/null
-
-  cp src/out/Debug/libjingle_peerconnection.jar . && \
-  cp src/out/Debug/libjingle_peerconnection_so.so . &&
-
-  popd > /dev/null # $SCRIPT_ABS_PATH
-
-  exit 0;
-}
-
 function usage {
     echo "Usage:"
     echo ""
@@ -57,8 +46,7 @@ pushd $SCRIPT_ABS_PATH > /dev/null
 export PATH=$PATH:$SCRIPT_ABS_PATH/depot_tools
 
 # Update
-gclient sync $REVISION || \
-echo "*** Probably critical error ***"
+gclient sync $REVISION || { echo "Error: Unable to sync source code"; exit 1; }
 
 pushd "src" > /dev/null
 source ./build/android/envsetup.sh && \
@@ -66,7 +54,7 @@ export GYP_DEFINES="build_with_libjingle=1 build_with_chromium=0 libjingle_java=
 gclient runhooks && \
 echo "Using following GYP_DEFINES: $GYP_DEFINES"
 
-ninja -C out/Release libjingle_peerconnection_jar || { echo "Error: WebRTC compilation failed"; exti 1; }
-popd > /dev/null # "src"
-popd > /dev/null # $SCRIPT_ABS_PATH
-end
+BIN_DIR="out/Release"
+ninja -C $BIN_DIR libjingle_peerconnection_jar || { echo "Error: WebRTC compilation failed"; exti 1; }
+cp $BIN_DIR/libjingle_peerconnection.jar .. && \
+cp $BIN_DIR/libjingle_peerconnection_so.so .. || { echo "Error: Unable to find libjingle binaries"; exit 1 ; }
