@@ -66,7 +66,7 @@ export GYP_DEFINES="build_with_libjingle=1 build_with_chromium=0 libjingle_java=
 gclient runhooks && \
 echo "Using following GYP_DEFINES: $GYP_DEFINES"
 
-ninja -C out/Debug libjingle_peerconnection_jar
+ninja -C out/Release libjingle_peerconnection_jar
 popd > /dev/null # "src"
 popd > /dev/null # $SCRIPT_ABS_PATH
 end
