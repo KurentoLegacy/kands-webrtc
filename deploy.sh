@@ -48,11 +48,11 @@ done
 [ -n "$settings" ] && SETTINGS=" --settings $settings"
 [ -n "$url" ] || { echo "Error: Maven repository URL is mandatory"; usage; exit 1; }
 if [ "$target_arch" = "armeabi" ]; then
-    TARGET_ARCH=" -t target_arch=arm"
+    TARGET_ARCH=" -t arm"
 elif [ "$target_arch" = "x86" ]; then
-    TARGET_ARCH=" -t target_arch=x64"
+    TARGET_ARCH=" -t ia32" # assume 32 emulators
 elif [ "$target_arch" = "mips" ]; then
-    TARGET_ARCH=" -t target_arch=mipsel"
+    TARGET_ARCH=" -t mipsel"
 elif [ -z "$target_arch" ]; then
     TARGET_ARCH=""
     target_arch="armeabi"
