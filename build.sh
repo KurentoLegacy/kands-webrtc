@@ -57,10 +57,11 @@ export PATH=$PATH:$SCRIPT_ABS_PATH/depot_tools
 gclient sync $REVISION --force || { echo "Error: Unable to sync source code"; exit 1; }
 
 pushd "src" > /dev/null
+echo "Build: Set android environment and run hooks"
 source ./build/android/envsetup.sh && \
 export GYP_DEFINES="build_with_libjingle=1 build_with_chromium=0 libjingle_java=1 enable_tracing=1 OS=android $TARGET_ARCH $GYP_DEFINES" && \
-gclient runhooks && \
-echo "Using following GYP_DEFINES: $GYP_DEFINES" ||
+echo "Build: GYP_DEFINES = $GYP_DEFINES" && \
+gclient runhooks || \
 { echo "Error: runhooks failed"; exit 1; }
 
 [ -z "$BIN_DIR" ] && BIN_DIR="out/Release"
