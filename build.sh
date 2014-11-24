@@ -8,7 +8,11 @@ SCRIPT_ABS_PATH=$(get_abs_path)
 function usage {
     echo "Usage:"
     echo ""
-    echo "      build.sh [ -t, --target_arch (arm|arm64|ia32|x64|mipsel) ] [ -r, --revision rev_number ]"
+    echo "      build.sh [ -t, --target_arch (arm|arm64|ia32|x64|mipsel) ] [ -r, --revision rev_number ] [ -d, --debug ]"
+    echo ""
+    echo "           -t, --target_arch    Default target architecture. Default is arm"
+    echo "           -r, --revision       Build release. Default is latest"
+    echo "           -d, --debug          Build debug mode. By default release is build"
     echo ""
 }
 
@@ -23,6 +27,10 @@ while [ "$1" != "" ]; do
             shift
             # Valid target architectures : arm, arm64, ia32, x64, mipsel
             target_arch=$1
+           ;;
+        -d | --debug )
+            # Activate debug mode
+            BIN_DIR="out/Debug"
            ;;
         -h | --help )
             usage
@@ -54,7 +62,7 @@ export GYP_DEFINES="build_with_libjingle=1 build_with_chromium=0 libjingle_java=
 gclient runhooks && \
 echo "Using following GYP_DEFINES: $GYP_DEFINES"
 
-BIN_DIR="out/Release"
+[ -z "$BIN_DIR" ] && BIN_DIR="out/Release"
 ninja -C $BIN_DIR libjingle_peerconnection_jar || { echo "Error: WebRTC compilation failed"; exti 1; }
 cp $BIN_DIR/libjingle_peerconnection.jar .. && \
 cp $BIN_DIR/libjingle_peerconnection_so.so .. || { echo "Error: Unable to find libjingle binaries"; exit 1 ; }
