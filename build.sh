@@ -54,7 +54,7 @@ pushd $SCRIPT_ABS_PATH > /dev/null
 export PATH=$PATH:$SCRIPT_ABS_PATH/depot_tools
 
 # Update
-gclient sync $REVISION || { echo "Error: Unable to sync source code"; exit 1; }
+gclient sync $REVISION --force || { echo "Error: Unable to sync source code"; exit 1; }
 
 pushd "src" > /dev/null
 source ./build/android/envsetup.sh && \
