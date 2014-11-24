@@ -60,7 +60,8 @@ pushd "src" > /dev/null
 source ./build/android/envsetup.sh && \
 export GYP_DEFINES="build_with_libjingle=1 build_with_chromium=0 libjingle_java=1 enable_tracing=1 OS=android $TARGET_ARCH $GYP_DEFINES" && \
 gclient runhooks && \
-echo "Using following GYP_DEFINES: $GYP_DEFINES"
+echo "Using following GYP_DEFINES: $GYP_DEFINES" ||
+{ echo "Error: runhooks failed"; exit 1; }
 
 [ -z "$BIN_DIR" ] && BIN_DIR="out/Release"
 ninja -C $BIN_DIR libjingle_peerconnection_jar || { echo "Error: WebRTC compilation failed"; exti 1; }
