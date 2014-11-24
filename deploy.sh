@@ -50,11 +50,12 @@ done
 if [ "$target_arch" = "armeabi" ]; then
     TARGET_ARCH=" -t target_arch=arm"
 elif [ "$target_arch" = "x86" ]; then
-    TARGET_ARCH=" -t target_arch=ia32"
+    TARGET_ARCH=" -t target_arch=x64"
 elif [ "$target_arch" = "mips" ]; then
     TARGET_ARCH=" -t target_arch=mipsel"
 elif [ -z "$target_arch" ]; then
-    TARGET_ARCH=""    
+    TARGET_ARCH=""
+    target_arch="armeabi"
 else
     echo "Error: unknown ndk CPU architecture selected: $target_arch"
     usage
@@ -66,7 +67,6 @@ $SCRIPT_RELATIVE_PATH/build.sh $REVISION $TARGET_ARCH || \
     { echo "Error: Build failed"; exit 1; }
 
 echo "Do deploy to URL: $url"
-[ -z "$target_arch" ] && target_arch=arm
 version=r$(webrtc_get_revision) || { echo "Unable to get version"; exit 1; }
 [ -f libjingle_peerconnection_so.so ] && mvn $SETTINGS clean package \
   org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy-file \
