@@ -70,6 +70,9 @@ export GYP_DEFINES="$GYP_DEFINES $TARGET_ARCH"
 echo "Build: GYP_DEFINES = $GYP_DEFINES"
 gclient runhooks || { echo "Error: runhooks failed"; exit 1; }
 
+# Clean
+(cd out/Debug; ninja -t clean)
+(cd out/Release; ninja -t clean)
 [ -z "$BIN_DIR" ] && BIN_DIR="out/Release"
 ninja -C $BIN_DIR libjingle_peerconnection_jar || { echo "Error: WebRTC compilation failed"; exti 1; }
 cp $BIN_DIR/libjingle_peerconnection.jar .. && \
