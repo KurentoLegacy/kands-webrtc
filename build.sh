@@ -76,6 +76,6 @@ echo "Build: GYP_DEFINES = $GYP_DEFINES"
 gclient runhooks || { echo "Error: runhooks failed"; exit 1; }
 
 [ -z "$BIN_DIR" ] && BIN_DIR="out/Release"
-ninja -C $BIN_DIR libjingle_peerconnection_jar || { echo "Error: WebRTC compilation failed"; exti 1; }
+ninja -C $BIN_DIR libjingle_peerconnection_jar || { echo "Error: WebRTC compilation failed"; exit 1; }
 cp $BIN_DIR/libjingle_peerconnection.jar .. && \
 cp $BIN_DIR/libjingle_peerconnection_so.so .. || { echo "Error: Unable to find libjingle binaries"; exit 1 ; }
