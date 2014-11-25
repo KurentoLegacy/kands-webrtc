@@ -54,15 +54,21 @@ pushd $SCRIPT_ABS_PATH > /dev/null
 export PATH=$PATH:$SCRIPT_ABS_PATH/depot_tools
 
 # Update
-gclient sync $REVISION --force || { echo "Error: Unable to sync source code"; exit 1; }
+[ -z "$revision" ] && REV="latest" || REV=$revision
+echo "Build: Synchronize repository to revision: $REV"
+gclient sync $REVISION --force || { echo "Error: Unable to sync source code"; exit 1 ; }
 
 pushd "src" > /dev/null
 echo "Build: Set android environment and run hooks"
-source ./build/android/envsetup.sh && \
-export GYP_DEFINES="$GYP_DEFINES $TARGET_ARCH" && 
-echo "Build: GYP_DEFINES = $GYP_DEFINES" && \
-gclient runhooks || \
-{ echo "Error: runhooks failed"; exit 1; }
+source ./build/android/envsetup.sh || exit 1
+[[ $GYP_DEFINES =~ "build_with_libjingle" ]] || GYP_DEFINES=" build_with_libjingle=1 $GYP_DEFINES"
+[[ $GYP_DEFINES =~ "build_with_chromium" ]] || GYP_DEFINES=" build_with_chromium=0 $GYP_DEFINES"
+[[ $GYP_DEFINES =~ "libjingle_java" ]] || GYP_DEFINES=" libjingle_java=1 $GYP_DEFINES"
+[[ $GYP_DEFINES =~ "enable_tracing" ]] || GYP_DEFINES=" enable_tracing=1 $GYP_DEFINES"
+[[ $GYP_DEFINES =~ "OS" ]] || GYP_DEFINES=" OS=android $GYP_DEFINES"
+export GYP_DEFINES="$GYP_DEFINES $TARGET_ARCH"
+echo "Build: GYP_DEFINES = $GYP_DEFINES"
+gclient runhooks || { echo "Error: runhooks failed"; exit 1; }
 
 [ -z "$BIN_DIR" ] && BIN_DIR="out/Release"
 ninja -C $BIN_DIR libjingle_peerconnection_jar || { echo "Error: WebRTC compilation failed"; exti 1; }
