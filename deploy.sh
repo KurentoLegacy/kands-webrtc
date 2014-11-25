@@ -3,7 +3,7 @@
 function usage {
     echo "Usage:"
     echo ""
-    echo "      deploy.sh [ -t, --target_arch (armeabi|x86|mipsel) ] [ -r, --revision rev_number ] [ -s, --settings mvn_settings ] -u, --url mvn_repository "
+    echo "      deploy.sh [ -d, --debug] [ -t, --target_arch (armeabi|x86|mipsel) ] [ -r, --revision rev_number ] [ -s, --settings mvn_settings ] -u, --url mvn_repository "
     echo ""
 }
 
@@ -14,6 +14,9 @@ source $SCRIPT_RELATIVE_PATH/utils.sh
 
 while [ "$1" != "" ]; do
     case $1 in
+        -d | --debug )
+            debug="-d"
+            ;;
         -r | --revision )
             shift
             revision=$1
@@ -63,7 +66,7 @@ else
 fi
 
 echo "Build WebRTC"
-$SCRIPT_RELATIVE_PATH/build.sh $REVISION $TARGET_ARCH || \
+$SCRIPT_RELATIVE_PATH/build.sh $REVISION $TARGET_ARCH $debug || \
     { echo "Error: Build failed"; exit 1; }
 
 echo "Do deploy to URL: $url"
