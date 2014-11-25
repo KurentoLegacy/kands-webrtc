@@ -71,6 +71,7 @@ echo "Build: GYP_DEFINES = $GYP_DEFINES"
 gclient runhooks || { echo "Error: runhooks failed"; exit 1; }
 
 # Clean
+rm -f ../libjingle_peerconnection*
 (cd out/Debug; ninja -t clean)
 (cd out/Release; ninja -t clean)
 [ -z "$BIN_DIR" ] && BIN_DIR="out/Release"
