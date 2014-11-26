@@ -1,10 +1,5 @@
 #!/bin/bash
 
-SCRIPT_RELATIVE_PATH=$(dirname $0)
-source $SCRIPT_RELATIVE_PATH/utils.sh
-
-SCRIPT_ABS_PATH=$(get_abs_path)
-
 function usage {
     echo "Usage:"
     echo ""
@@ -43,15 +38,14 @@ while [ "$1" != "" ]; do
     shift
 done
 
+WORKING_PATH=$(cd $(dirname $0) ; pwd )
 [ -n "$revision" ] && REVISION=" -r $revision"
 [ -n "$target_arch" ] && TARGET_ARCH="target_arch=$target_arch"
-
-pushd $SCRIPT_ABS_PATH > /dev/null
 
 # Get depot_tools
 [ -d ./depot_tools ] || git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git || \
     { echo "Unable to download depot_tools"; exit 1; }
-export PATH=$PATH:$SCRIPT_ABS_PATH/depot_tools
+export PATH=$PATH:$WORKING_PATH/depot_tools
 
 # Clean
 rm -f libjingle_peerconnection*
@@ -63,9 +57,8 @@ rm -f libjingle_peerconnection*
 echo "Build: Synchronize repository to revision: $REV"
 gclient sync $REVISION --force --nohooks|| { echo "Error: Unable to sync source code"; exit 1 ; }
 
-pushd "src" > /dev/null
 echo "Build: Set android environment and run hooks"
-source ./build/android/envsetup.sh || exit 1
+source src/build/android/envsetup.sh || exit 1
 #[[ $GYP_DEFINES =~ "build_with_libjingle" ]] || GYP_DEFINES=" build_with_libjingle=1 $GYP_DEFINES"
 #[[ $GYP_DEFINES =~ "build_with_chromium" ]] || GYP_DEFINES=" build_with_chromium=0 $GYP_DEFINES"
 #[[ $GYP_DEFINES =~ "libjingle_java" ]] || GYP_DEFINES=" libjingle_java=1 $GYP_DEFINES"
@@ -76,6 +69,9 @@ echo "Build: GYP_DEFINES = $GYP_DEFINES"
 gclient runhooks || { echo "Error: runhooks failed"; exit 1; }
 
 [ -z "$BIN_DIR" ] && BIN_DIR="out/Release"
-ninja -C $BIN_DIR libjingle_peerconnection_jar || { echo "Error: WebRTC compilation failed"; exit 1; }
-cp $BIN_DIR/libjingle_peerconnection.jar .. && \
-cp $BIN_DIR/libjingle_peerconnection_so.so .. || { echo "Error: Unable to find libjingle binaries"; exit 1 ; }
+(
+    cd src
+    ninja -C $BIN_DIR libjingle_peerconnection_jar || { echo "Error: WebRTC compilation failed"; exit 1; }
+)
+cp src/$BIN_DIR/libjingle_peerconnection.jar . && \
+cp src/$BIN_DIR/libjingle_peerconnection_so.so . || { echo "Error: Unable to find libjingle binaries"; exit 1 ; }
